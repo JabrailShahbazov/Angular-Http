@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {PostModule} from './post/post.module';
 import {catchError, map} from 'rxjs/operators';
 import {Subject, Subscription, throwError} from 'rxjs';
@@ -28,15 +28,14 @@ export class PostService {
   }
 
   fetchPosts() {
-
+    let searchParams = new HttpParams();
+    searchParams = searchParams.append('print', 'pretty');
+    searchParams = searchParams.append('custom', 'key');
     return this.http.get<{ [key: string]: PostModule }>(
       'https://ng-comlete-guide-c94a2-default-rtdb.firebaseio.com/posts.json',
       {
-        headers: new HttpHeaders(
-          {
-            'custom-header': 'Hello'
-          }
-        )
+        headers: new HttpHeaders({'custom-header': 'Hello'}),
+        params: searchParams
       })
       .pipe(map(responseData => {
           const postsArray: PostModule[] = [];
